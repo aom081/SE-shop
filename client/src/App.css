@@ -1,0 +1,17 @@
+@import url();
+
+
+body {
+    font-family: "K2D", sans-serif;
+}
+
+.subtitle{
+    @apply text-rad uppercase tracking-wide font-semibold tex-lg;
+}
+.title{
+    @apply text-4xl md:text-5xl md:leading-snug font-bold my-2
+}
+
+.section-container{
+    @apply max-w-screen-2xl container mx-auto xl:px-24 px-4;
+}
