@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "fe[f,[ew",
+    "name": "Eiffel Tower Statue",
+    "description": "A miniature replica of the iconic Eiffel Tower.",
+    "price": 14.99,
+    "image": "eiffel_tower_statue.jpg",
+    "category": "Accessories"
+  },
+  {
+    "_id": "weqer23r23",
+    "name": "Leaning Tower of Pisa Keychain",
+    "description": "A keychain featuring a small replica of the Leaning Tower of Pisa.",
+    "price": 7.99,
+    "image": "https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg",
+    "category": "Accessories"
+  },
+  {
+    "_id": "qwsdf235sdf",
+    "name": "Statue of Liberty Magnet",
+    "description": "A magnet with a depiction of the Statue of Liberty, perfect for refrigerators or magnetic boards.",
+    "price": 6.49,
+    "image": "https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg",
+    "category": "Swag"
+  },
+  {
+    "_id": "sdf334tg",
+    "name": "Big Ben Snow Globe",
+    "description": "A snow globe featuring the iconic Big Ben clock tower in London.",
+    "price": 12.99,
+    "image": "big_ben_snow_globe.jpg",
+    "category": "Gadget"
+  },
+  {
+    "_id": "dfg234dg",
+    "name": "Taj Mahal Postcard",
+    "description": "A postcard featuring a stunning photograph of the Taj Mahal in Agra, India.",
+    "price": 3.99,
+    "image": "taj_mahal_postcard.jpg",
+    "category": "Swag"
+  }
+]
