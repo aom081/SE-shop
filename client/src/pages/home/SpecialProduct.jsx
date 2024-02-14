@@ -83,7 +83,7 @@ const SpecialProduct = () => {
   return (
     <div className=' section-container my-20 relative'>
       <div className='text-left'>
-        <p className=' subtitle'>Special Items</p>
+        <p className="subtitle">Special Items</p>
         <h2 className='title'> Standout Items from Our Products</h2>
       </div>
       <div className=' md:absolute right-3 top-8 mb-10 md:mr-24'>
