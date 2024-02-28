@@ -4,6 +4,7 @@ import Main from '../layout/Main';
 import Home from '../pages/home/Home';
 import SignUp from '../components/SignUp';
 import UpdateProfile from '../pages/dashboard/UpdateProfile';
+import PrivateRouter from '../PrivateRouter/PrivateRouter';
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/shop",
-        element: <ProductList />
+        element: (
+        <PrivateRouter>
+        <ProductList />
+         </PrivateRouter>
+        )
       },
       {
         path: "/update-profile",
