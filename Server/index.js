@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const ProductRouter = require( "./routes/productRoutes"); 
+const cartRouter =require("./routes/cart.router")
 const swaggerUi = require("swagger-ui-express");
 const swaggerDefinition = {
   openapi: '3.0.0',
