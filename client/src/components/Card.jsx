@@ -13,6 +13,7 @@ const Card = ({ item }) => {
     };
 
     const handleAddToCart = (item) => {
+        if(user && user.email){
         const cartItem = {
             productId: item._id,
             email: user.email,
@@ -28,7 +29,26 @@ const Card = ({ item }) => {
             showConfirmButton: false,
             timer: 1500,
         });
-    }
+        axios.post("http//location:5000/carts",cartItem).then(
+            res=>{console.log(res)}
+        )
+    }else {
+        Swal.fire({     
+          icon: "error",  
+          title: "Login to add this product!",    
+          text: "Browse our products or Sign Up / Login" ,                
+          confirmButtonText: "Sign In",            
+          confirmButtonColor:"#ff6347",
+          showCancelButton: true,                            
+          cancelButtonColor: "#d33",
+          reverseButtons: true ,                            
+        }).then((result) => {
+            if (result.value) {
+                window.location="/signin";
+            }  
+        })
+    } 
+}
 
     return (
         <div className='card shadow-xl relative mr-5 md:my-5'>
