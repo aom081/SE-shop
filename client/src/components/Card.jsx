@@ -1,12 +1,33 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const Card = ({ item }) => {
     const { _id, name, image, price, description } = item;
+    const {email}  = localStorage.getItem('userInfo');
 
     const [isHeartFilled, setIsHeartFilled] = React.useState(false);
     const handleHeartClick = () => {
         setIsHeartFilled(!isHeartFilled);
+    };
+
+    const handleAddToCart = (item) => {
+        const cartItem = {
+            productId: item._id,
+            email: user.email,
+            name: item.name,
+            image: item.image,
+            price: item.price,
+            quantity: 1,
+        };
+        Swal.fire({
+            title: "Product added on the cart",
+            position: "center",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+        });
     }
 
     return (
@@ -37,8 +58,7 @@ const Card = ({ item }) => {
                 <p>{description}</p>
                 <div className=' card-actions justify-between items-center mt-2'>
                     <h5 className=' font-semibold'>{price}</h5>
-                    <button className=' btn bg-red text-white'> Add to cart</button>
-
+                    <button className=' btn bg-red text-white' onClick={handleAddToCart}> Add to cart</button>
                 </div>
             </div>
 
@@ -47,3 +67,4 @@ const Card = ({ item }) => {
 }
 
 export default Card
+

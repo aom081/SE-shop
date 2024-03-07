@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Card from '../../components/card';
+import Card from '../../components/Card';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick"
