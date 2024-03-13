@@ -1,54 +1,74 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Swal from "sweetalert2";
 import axios from "axios";
+import { AuthContext } from "../context/AuthProvider";
+import useCart from '../hook/useCart';
 
 const Card = ({ item }) => {
     const { _id, name, image, price, description } = item;
-    const {email}  = localStorage.getItem('userInfo');
-
-    const [isHeartFilled, setIsHeartFilled] = React.useState(false);
+    const { user } = useContext(AuthContext);
+    const [cart, refetch] = useCart;
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [isHeartFilled, setIsHeartFilled] = useState(false);
     const handleHeartClick = () => {
         setIsHeartFilled(!isHeartFilled);
     };
-
     const handleAddToCart = (item) => {
-        if(user && user.email){
-        const cartItem = {
-            productId: item._id,
-            email: user.email,
-            name: item.name,
-            image: item.image,
-            price: item.price,
-            quantity: 1,
-        };
-        Swal.fire({
-            title: "Product added on the cart",
-            position: "center",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1500,
-        });
-        axios.post("http//location:5000/carts",cartItem).then(
-            res=>{console.log(res)}
-        )
-    }else {
-        Swal.fire({     
-          icon: "error",  
-          title: "Login to add this product!",    
-          text: "Browse our products or Sign Up / Login" ,                
-          confirmButtonText: "Sign In",            
-          confirmButtonColor:"#ff6347",
-          showCancelButton: true,                            
-          cancelButtonColor: "#d33",
-          reverseButtons: true ,                            
-        }).then((result) => {
-            if (result.value) {
-                window.location="/signin";
-            }  
-        })
-    } 
-}
+        if (user && user.email) {
+            const cartItem = {
+                productId: item._id,
+                email: user.email,
+                name: item.name,
+                image: item.image,
+                price: item.price,
+                quantity: 1,
+            };
+
+            axios.post("http//location:5000/carts", cartItem).then((response) => {
+                console.log(response);
+                if (response.status === 200 || response.status == 201) {
+                    refetch();
+                    Swal.fire({
+                        title: "product added on the cart",
+                        position: "center",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+                .catch((err) => {
+                    console.error(err);
+                    const errorMessage = error.response.data.message;
+                    Swal.fire({
+                        title: 'Error!',
+                        text: `${errorMessage}`,
+                        icon: 'error',
+                        showCancelButton: false,
+                        timer: 1500
+                    });
+                });
+        } else {
+            Swal.fire({
+                title: '<strong>Please Login First</strong>',
+                icon: 'info',
+                position: "center",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                showConfirmButton: true,
+                confirmButtonText: "Login now",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate("/login", {
+                        status: { from: location }
+                    });
+                }
+            });
+        }
+    }
 
     return (
         <div className='card shadow-xl relative mr-5 md:my-5'>
@@ -84,7 +104,7 @@ const Card = ({ item }) => {
 
         </div>
     )
-}
+};
 
 export default Card
 

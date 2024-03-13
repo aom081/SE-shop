@@ -148,7 +148,7 @@ router.post("/", async (req, res) => {
     if (existingCarts) {
        existingCarts.quantity += newCart.quantity;
        await existingCarts.save();
-       return res.status(200).json(existingCarts);
+       return res.status(200).json(cart);
     } else {
       const newCart = new CartModel(cart);
       await newCart.save();
