@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import Card from '../../components/card'
+import useAxiosPublic from '../../hook/useAxiosPublic'
 
 const ProductList = () => {
     const [products, setProducts] = useState([])
@@ -14,8 +15,9 @@ const ProductList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("/product.json");
-                const data = await response.json();
+                //const response = await fetch("/product.json");
+                const response = await axiosPublic.get( "/product");
+                const data = await response.data;
                 setProducts(data);
                 setFilterItemed(data);
                 setCategories(["all", ...new Set(data.map((item) => item.category))])
