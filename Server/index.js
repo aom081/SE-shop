@@ -2,30 +2,30 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const ProductRouter = require( "./routes/productRoutes"); 
-const  UserRouter=require('./routes/userRoutes')
-const cartRouter =require("./routes/cart.router")
+const ProductRouter = require("./routes/productRoutes");
+const UserRouter = require("./routes/userRoutes");
+const cartRouter = require("./routes/cart.router");
 const swaggerUi = require("swagger-ui-express");
+const jwt = require('jsonwebtoken');
 const swaggerDefinition = {
-  openapi: '3.0.0',
+  openapi: "3.0.0",
   info: {
-    title: 'RESTful API for SE Shop',
-    version: '1.0.0',
-    description:
-      'This is a REST API application made with Express for SE Shop',
+    title: "RESTful API for SE Shop",
+    version: "1.0.0",
+    description: "This is a REST API application made with Express for SE Shop",
     license: {
-      name: 'Licensed Under MIT',
-      url: 'https://spdx.org/licenses/MIT.html',
+      name: "Licensed Under MIT",
+      url: "https://spdx.org/licenses/MIT.html",
     },
     contact: {
-      name: 'Nattawut Keawmaha',
-      url: 'https://jsonplaceholder.typicode.com',
+      name: "Nattawut Keawmaha",
+      url: "https://jsonplaceholder.typicode.com",
     },
   },
   servers: [
     {
-      url: 'http://localhost:5000',
-      description: 'Development server',
+      url: "http://localhost:5000",
+      description: "Development server",
     },
   ],
 };
@@ -33,7 +33,7 @@ const swaggerDefinition = {
 const options = {
   swaggerDefinition,
   // Paths to files containing OpenAPI definitions
-  apis: ['./routes/*.js'],
+  apis: ["./routes/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
@@ -41,7 +41,7 @@ const swaggerSpec = swaggerJSDoc(options);
 //config .env
 dotenv.config();
 const app = express();
-const CLIENT_URL =process.env.CLIENT_URL;
+const CLIENT_URL = process.env.CLIENT_URL;
 app.use(cors({ credentials: true, origin: CLIENT_URL }));
 app.use(express.json());
 
@@ -50,17 +50,24 @@ const MOMGODB_URI = process.env.MOMGODB_URI;
 mongoose.connect(MOMGODB_URI);
 
 app.get("/", (req, res) => {
-    res.send("<h1>This is a RESTful API for SE Shop</h1>");
-})
+  res.send("<h1>This is a RESTful API for SE Shop</h1>");
+});
 
 //Add Router
 app.use("/products", ProductRouter);
 app.use("/carts", cartRouter);
 app.use("/users", UserRouter);
 
+app.post("/jwt", async (req, res) => {
+  //create and return JWT
+  const user = req.body;
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET,{   expiresIn: '1h'
+});
+  res.status(200).json({ token });
+});
+
 //RUN Server
 const PORT = process.env.PORT;
 const server = app.listen(PORT, () => {
-    console.log("Server is running on http://localhost:" + PORT);
-})
-
+  console.log("Server is running on http://localhost:" + PORT);
+});
