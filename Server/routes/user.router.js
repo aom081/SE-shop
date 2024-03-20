@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const UserModel = require("../models/User.model");
 const swaggerJSDoc = require("swagger-jsdoc");
+const verifyToken = require("../middlewares/verifyToken");
+const verifyAdmin = require("../middlewares/verifyAdmin");
 
 router.get("/", async (req, res) => {
   try {
@@ -78,7 +80,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //Check if a user is an  admin or the user making the request
-router.get("/admin/:email", async (req,res) => {
+router.get("/admin/:email", verifyToken,verifyAdmin, async (req,res) => {
     try {
         const {email} = req.params;
         const user = await UserModel.findOne({email})
@@ -95,29 +97,29 @@ router.get("/admin/:email", async (req,res) => {
 
 //change  user to Admin role
 //function path is chang someone 
-router.patch('/make-admin/:id',async (req,res)=> {
-    try{
-        const {id} = req.params;
-       const updatedAdmin = await UserModel.findByIdAndUpdate(
-        id,
-        {
-            role:"user"
-        },
-        {
-            new:true,
-            runValidators: true,
-        }
-        )
-       if(!user){
-           return res.status(404).json({message:"User not found"})
-       }
-       res.json(updatedAdmin)
-   }catch(error){
-       res.status(500).json({message: error.message});
-   }
-})
+router.patch("/make-admin/:id", verifyToken, verifyAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedAdmin = await UserModel.findByIdAndUpdate(
+      id,
+      {
+        role: "user",
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(updatedAdmin);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 //Chang Admin to user role
-router.patch("/make-admin/:id", async (req, res) => {
+router.patch("/make-admin/:id", verifyToken, verifyAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const updatedUser = await UserModel.findByIdAndUpdate(
