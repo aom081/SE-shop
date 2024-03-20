@@ -6,6 +6,7 @@ import SignUp from '../components/SignUp';
 import UpdateProfile from '../pages/dashboard/UpdateProfile';
 import PrivateRouter from '../PrivateRouter/PrivateRouter';
 import Cart from '../pages/Shop/Cart';
+import DashboardLayout from '../layout/Dashboardlayout';
 
 const router = createBrowserRouter([
   {
@@ -19,9 +20,9 @@ const router = createBrowserRouter([
       {
         path: "/shop",
         element: (
-        <PrivateRouter>
-        <ProductList />
-         </PrivateRouter>
+          <PrivateRouter>
+            <ProductList />
+          </PrivateRouter>
         )
       },
       {
@@ -37,6 +38,18 @@ const router = createBrowserRouter([
         element: <UpdateProfile />
       }
     ],
+  },
+  {
+    path: "DashboardLayout*",
+    element: <DashboardLayout />,
+    children: [{
+      path: "users",
+      element: <Users />
+    },
+  {
+    path:"",
+    element:<Dashboard />
+  }]
   },
   {
     path: "/signUp",

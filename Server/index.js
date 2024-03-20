@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const ProductRouter = require( "./routes/productRoutes"); 
+const  UserRouter=require('./routes/userRoutes')
 const cartRouter =require("./routes/cart.router")
 const swaggerUi = require("swagger-ui-express");
 const swaggerDefinition = {
@@ -54,6 +55,8 @@ app.get("/", (req, res) => {
 
 //Add Router
 app.use("/products", ProductRouter);
+app.use("/carts", cartRouter);
+app.use("/users", UserRouter);
 
 //RUN Server
 const PORT = process.env.PORT;
