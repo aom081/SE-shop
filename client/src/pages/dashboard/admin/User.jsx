@@ -15,67 +15,55 @@ const User = () => {
   })
 
   const handleMakeAdmin = (user) => {
-    //TODO api from user.router.js 
-    //use axiosSecure
-    
-    Swal.fire({
-      title: "Are you sure?", 
-      text: `User ${user.username} will be made admin!`,  
-      icon: "warning", 
-      showCancelButton: true, 
-      confirmButtonText: "Yes, make it!" ,
-      cancelButtonText: "No"
-    }).then(async result => {
-      if (!result.isConfirmed) return;
-      try{
-        let res = await axiosSecure.post(`/makeadmin/${user._id}`);
-        
-        Swal.fire("Made Admin!","The user has been made an admin.", "success");
-        refetch()
-      }catch(err){
-        console.log(err)  
-        Swal.showValidationMessage(`Request failed: ${err}`);
-      }
-     });
-
-
-    Swal.fire({
-      title: `Are you sure to make  ${user.username} as admin?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No"
-    }).then(async result => {
-      if (!result.isConfirmed) return;
-      try {
-        const res = await axiosSecure.patch(`/make-admin/${user._id}`);
-        Swal.fire("Success!", `${res.data.msg}`, "success");
-        refetch()
-      } catch (err) { 
-        console.log(err)
-        Swal.fire("Error!",  err.response?.data.error || "Something went wrong.", "error");
-      }
-    });
-
-    console.log(user);
-    Swal.fire({
-      title: "Are you sure?",   
-      text: `User ${user.username} will be made admin`,    
-      icon: "warning",  
-      showCancelButton: true,  
-      confirmButtonText: "Yes, make it!",
-      cancelButtonText: "No, cancel!"            
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosSecure.post(`/admin/${user._id}`).then(()=>{ 
-          Swal.fire("Made Admin!","User has been made an admin.", "success");
-          refetch()
-        });                
-      } else if (result.isDismissed) {  
-        Swal.fire("Canceled!","You can keep the user as a normal user :)","error");
-      }
+    if(user.role ===  "admin"){
+      axiosSecure.patch(`/users/user/${user._id}`).then((res) => {
+        refetch();
+        Swal.fire({
+          icon: "success",
+          title: `User ${user.username} is no longer an admin`,
+          timer: 1500,
+        })
+      }).catch((error) => {
+        const errorStatus = error?.response?.status;
+        const errorMessage = error?.response?.message;
+        Swal.fire({
+          icon: "error",
+          title: `Error! ${errorStatus}: ${errorMessage}`,
+          timer: 1500,
+        })
+      })
+  }else{
+    axiosSecure.patch(`/users/admin/${user._id}`).then(()=>{
+      user.role="admin"
+      refetch()
+      Swal.fire({
+        icon:"info",
+        title:`User ${user.username} has been made as Admin`
+      })
     })
   }
+}
+
+const handleDelete = (user) => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (!result.isConfirmed) return;
+    axiosSecure.delete(`/users/${user._id}`).then(refetch())
+    .catch((err)=>console.log(err))
+    Swal.fire(  
+      'Deleted!',
+      'The User has been deleted.',
+      'success'
+    )
+  })
+}
   return (
     <div>
       <div className='flex justify-between mx-4 my-4'>
