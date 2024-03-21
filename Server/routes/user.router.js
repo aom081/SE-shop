@@ -29,10 +29,8 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const users = req.body;
-
   try {
     const existingUser = await UserModel.findOne({
-      productId: carts.productId,
       email: users.email,
     });
     // If there is no item in the database with that id then create a new one.

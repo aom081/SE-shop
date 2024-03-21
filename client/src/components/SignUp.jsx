@@ -3,9 +3,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle, FaGithub, FaFacebookSquare } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthProvider";
+import useAxiosPublic from '../hook/useAxiosPublic';
+import Swal from 'sweetalert2';
+import Modal from "./Modal";
+
 
 const SignUp = () => {
-    const { createUser } = useContext(AuthContext);
+    const { createUser, updateUserProfile, signUpWithGoogle } = useContext(AuthContext);
+    const axiosPublic = useAxiosPublic();
     const location = useLocation();
     const navigate = useNavigate();
     const from = location?.state?.from?.pathname || "/";
@@ -22,13 +27,55 @@ const SignUp = () => {
             .then((result) => {
                 const user = result.user;
                 console.log(user);
-                alert("Account created Successfully");
-                navigate(from, { replace: true });
+                updateUserProfile(data.name, data.photoURL).then(() => {
+                    const userInfo = {
+                        name: data.name,
+                        email: data.email,
+                    };
+                    axiosPublic.post("/users", userInfo).then((response) => {
+                        console.log(response);
+                        console.log(user);
+                        Swal.fire({
+                            title: "Account created Successfully",
+                            icon: "success",
+                            timer: 1500,
+                        })
+                        navigate(from, { replace: true });
+                    })
+                })
+
             })
             .catch((error) => {
                 console.log(error);
             });
     }
+
+    const googleSignUp = () => {
+        signUpWithGoogle()
+            .then((result) => {
+                const user = result.user;
+                const userInfo = {
+                    name: result.user?.displayName,
+                    email: result.user?.email,
+                    photoURL: result.user?.photoURL
+                };
+                axiosPublic.post("/users", userInfo).then((response) => {
+                    console.log(response);
+                    console.log(user);
+                    Swal.fire({
+                        title: "Google SignUp Successfully",
+                        icon: "success",
+                        timer: 1500,
+                    })
+                    navigate(from, { replace: true });
+                })
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+
     return (
         <div className="max-w-md bg-white shadow w-full mx-auto flex items-center justify-center my-20">
             <div className="modal-action mt-0 flex flex-col justify-center">
@@ -94,4 +141,4 @@ const SignUp = () => {
     )
 }
 
-export default SignUp
+export default SignUp;

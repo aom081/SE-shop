@@ -3,8 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaGoogle, FaGithub, FaFacebookSquare } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthProvider";
+import Swal from 'sweetalert2';
 
-const Modal = ({ name }) => {
+const Modal = ({ nameModal }) => {
     const { login, signUpWithGoogle } = useContext(AuthContext);
     const { createUser } = useContext(AuthContext);
     const location = useLocation();
@@ -34,19 +35,33 @@ const Modal = ({ name }) => {
 
     const googleSignUp = () => {
         signUpWithGoogle()
-        .then((result) => {
-            const user =result.user;
-            console.log(user);
-            alert("Google SigUp Successfully");
-            document.getElementById("login").close();
-        })
-        .catch((error) => {
-            console.log(error);
-        })
+            .then((result) => {
+                const user = result.user;
+                const userInfo = {
+                    name: result.user?.displayName,
+                    email: result.user?.email,
+                    photoURL: result.user?.photoURL
+                };
+                axiosPublic.post("/users", userInfo).then((response) => {
+                    console.log(response);
+                    console.log(user);
+                    Swal.fire({
+                        title: "Google SignUp Successfully",
+                        icon: "success",
+                        timer: 1500,
+                    })
+                    navigate(from, { replace: true });
+                })
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
+
+    
     return (
         <div>
-            <dialog id={name} className="modal modal-bottom sm:modal-middle">
+            <dialog id={nameModal} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
                     <div className="modal-action mt-0 flex flex-col justify-center">
                         <h3 className="font-bold text-lg">Please login!</h3>
@@ -92,9 +107,9 @@ const Modal = ({ name }) => {
                                 </Link> 
                             </p>
                             <button
-                                htmlFor={name}
+                                htmlFor={nameModal}
                                 className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
-                                onClick={() => document.getElementById(name).close()}>
+                                onClick={() => document.getElementById(nameModal).close()}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"

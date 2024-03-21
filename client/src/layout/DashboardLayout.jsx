@@ -9,9 +9,11 @@ import { BsBasketFill } from "react-icons/bs";
 import { FaLocationArrow } from "react-icons/fa6";
 import { FaCircleQuestion } from "react-icons/fa6";
 import { Outlet } from 'react-router-dom';
+import useAdmin from '../hook/useAdmin';
 
 const DashboardLayout = () => {
-    const isAdmin = true;
+    const [isAdmin, isAdminLoading]  = useAdmin();
+    //const isAdmin = true;
     return (
         <div>
             {isAdmin ?(
@@ -66,7 +68,7 @@ const DashboardLayout = () => {
                     </div>
                 </div>
             ):(
-                <div>
+                <div className=' h-screen flex items-center justify-center'>
                     <Link to="/" className='btn btn-sx btn-error sm:btn-sm md:btn-md'> you are not Admin,Return to Home</Link>
                 </div>
             )}
